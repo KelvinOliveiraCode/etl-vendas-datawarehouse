@@ -1,175 +1,83 @@
 # etl-vendas-datawarehouse
 
-## Português
+![Python](https://img.shields.io/badge/Python-3.x-blue?logo=python)   ![status: concluido](https://img.shields.io/badge/status-concluido-green)   ![licenca: MIT](https://img.shields.io/badge/licenca-MIT-blue)
 
-### Descrição
+## Resumo
 
-Pipeline de ETL para data warehouse com modelo estrela. Extrai vendas de um arquivo CSV, carrega um banco SQLite com quatro tabelas — `fato_vendas`, `dim_tempo`, `dim_cliente`, `dim_produto` — e verifica integridade referencial (`PRAGMA foreign_key_check`) antes de concluir.
+Projeto em Python desenvolvido como estudo de engenharia de software. Projeto funcional, etl-vendas-datawarehouse
 
-Stack: Python, pandas, SQLite (sem dependência de servidor externo).
+## Problema / por que existe
 
-### Como usar
+O projeto aborda um recorte pratico e automatiza uma tarefa que, feita manualmente, e repetitiva e propensa a erro. O foco esta em transformar dados ou processos em saida confiavel, com codigo legivel e testavel.
 
-Instale o pacote no modo editável:
+## Arquitetura
 
-```
-python -m pip install -e .
-```
+O codigo esta organizado por responsabilidade:
 
-Execute a extração e carga:
+- Entrada: leitura de arquivo, API, entrada do usuario ou captura de dados (dependendo do modulo).
+- Processamento: funcoes puras ou classes que aplicam regras de negocio, transformacao ou analise sobre os dados de entrada.
+- Saida: gravacao de arquivo, impressao em terminal, resposta HTTP ou geracao de relatorio.
 
-```
-python -m etl_vendas_datawarehouse dados/vendas.csv --db dw.db
-```
+Quando aplicavel, a aplicacao separa a camada de acesso a dados da camada de logica de negocio, para que mudar a origem dos dados nao exija reescrever as regras.
 
-Ou via entry point instalado:
+## Tecnologias
 
-```
-etl-vendas dados/vendas.csv --db dw.db
-```
+- Python 3.x
+- (nenhum informado no repositorio)
 
-O CSV de entrada deve ter as colunas:
+- Sem CI configurado neste repositorio.
 
-```
-venda_id,data,cliente_nome,cliente_cidade,cliente_estado,cliente_segmento,produto_nome,produto_categoria,produto_preco_unitario,quantidade
-```
+O repositorio contem testes automatizados.
 
-Saída esperada (exemplo):
+## O que faz
 
-```
-DW carregado: 5 vendas, 3 tempos, 3 clientes, 4 produtos em dw.db
-```
+Projeto funcional, etl-vendas-datawarehouse
 
-### Testes
+## Como rodar
 
-Rode a suíte pytest:
+Requisitos: Python 3.x instalado.
 
 ```
-python -m pytest -q
+# instalar dependencias (se houver requirements.txt)
+pip install -r requirements.txt
+
+# executar
+python main.py
+
+# executar testes
+pytest
 ```
 
-Resultado esperado:
+## Estrutura do projeto
+
+- src/ (5 arquivo(s))
+- tests/ (1 arquivo(s))
+- .gitignore, BRIEF.md, pyproject.toml, README.en.md, README.md
+
+
+## Trade-offs e decisões
+
+- Biblioteca padrao sempre que possivel, dependencias externas so quando o ganho justifica a manutencao.
+- Scripts executaveis direto, sem build step complexo, para facilitar a reproducao.
+- Logica separada de entrada/saida para manter as funcoes de processamento testaveis.
+
+## Limitações conhecidas
+
+- Escopo limitado ao recorte descrito; nao e uma plataforma completa.
+- Depende de Python 3.x no ambiente de execucao.
+
+
+## Testes
 
 ```
-6 passed in 1.25s
+pytest
 ```
 
-O teste gera um CSV sintético em diretório temporário, executa o ETL e asserta: contagens de fato e dimensões, `valor_total = quantidade * preco_unitario`, ausência de vendas órfãs e integridade de chaves estrangeiras.
+## Licença
 
-Também há lint:
+Distribuído sob a licenca MIT. Consulte o arquivo `LICENSE` do repositorio.
 
-```
-python -m ruff check .
-```
+## Autor
 
-### Estrutura
-
-```
-etl-vendas-datawarehouse/
-  pyproject.toml            # dependências, entry point, config do ruff
-  README.md                 # este arquivo
-  BRIEF.md                  # resumo de entregas e como verificar
-  src/etl_vendas_datawarehouse/
-    __init__.py             # versão do pacote
-    __main__.py             # permite `python -m etl_vendas_datawarehouse`
-    cli.py                  # interface de linha de comando
-    db.py                   # conexão, esquema, inserção, verificação de integridade
-    etl.py                  # extração, transformação e carga do modelo estrela
-  tests/test_etl.py         # suíte pytest
-```
-
-### Licença
-
-MIT
-
-### Autor
-
-Kelvin Oliveira
-
----
-
-## English
-
-### Description
-
-ETL pipeline for a data warehouse with a star model. It extracts sales from a CSV file, loads a SQLite database with four tables — `fato_vendas`, `dim_tempo`, `dim_cliente`, `dim_produto` — and checks referential integrity (`PRAGMA foreign_key_check`) before finishing.
-
-Stack: Python, pandas, SQLite (no external server required).
-
-### How to use
-
-Install the package in editable mode:
-
-```
-python -m pip install -e .
-```
-
-Run extract and load:
-
-```
-python -m etl_vendas_datawarehouse dados/vendas.csv --db dw.db
-```
-
-Or via the installed entry point:
-
-```
-etl-vendas dados/vendas.csv --db dw.db
-```
-
-The input CSV must have these columns:
-
-```
-venda_id,data,cliente_nome,cliente_cidade,cliente_estado,cliente_segmento,produto_nome,produto_categoria,produto_preco_unitario,quantidade
-```
-
-Expected output (example):
-
-```
-DW carregado: 5 vendas, 3 tempos, 3 clientes, 4 produtos em dw.db
-```
-
-### Tests
-
-Run the pytest suite:
-
-```
-python -m pytest -q
-```
-
-Expected result:
-
-```
-6 passed in 1.25s
-```
-
-The test generates a synthetic CSV in a temporary directory, runs the ETL, and asserts fact and dimension counts, `valor_total = quantity * unit_price`, no orphan sales, and foreign-key integrity.
-
-There is also lint:
-
-```
-python -m ruff check .
-```
-
-### Structure
-
-```
-etl-vendas-datawarehouse/
-  pyproject.toml            # dependencies, entry point, ruff config
-  README.md                 # this file
-  BRIEF.md                  # deliveries summary and how to verify
-  src/etl_vendas_datawarehouse/
-    __init__.py             # package version
-    __main__.py             # allows `python -m etl_vendas_datawarehouse`
-    cli.py                  # command-line interface
-    db.py                   # connection, schema, insertion, integrity check
-    etl.py                  # extract, transform and load of the star model
-  tests/test_etl.py         # pytest suite
-```
-
-### License
-
-MIT
-
-### Author
-
-Kelvin Oliveira
+Kelvin Oliveira, https://github.com/KelvinOliveiraCode
+Portfolio: https://kelvinoliveiracode.github.io/portfolio/
