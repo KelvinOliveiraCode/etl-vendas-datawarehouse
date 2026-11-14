@@ -1,118 +1,94 @@
 # etl-vendas-datawarehouse
 
-<div align="center">
-
 **English** · [Português (Brasil)](README.md)
 
-</div>
-
-[![Python 3](https://img.shields.io/badge/Python-3.x-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/) [![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?style=flat-square&logo=scikit-learn)](https://scikit-learn.org/) [![pandas](https://img.shields.io/badge/pandas-150458?style=flat-square&logo=pandas)](https://pandas.pydata.org/) [![pytest](https://img.shields.io/badge/pytest-0A9EDC?style=flat-square&logo=pytest)](https://docs.pytest.org/) [![MIT License](https://img.shields.io/badge/License-MIT-f4c430?style=flat-square)](LICENSE)
-
-### Projeto funcional ,  etl-vendas-datawarehouse
-
----
+[![Python 3](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white)](#) [![pandas](https://img.shields.io/badge/pandas-2.2%2B-150458?style=flat-square&logo=pandas)](#) [![pytest](https://img.shields.io/badge/pytest-6%20tests-0A9EDC?style=flat-square&logo=pytest)](#) [![MIT License](https://img.shields.io/badge/License-MIT-f4c430?style=flat-square)](LICENSE)
 
 ## What it is
 
-Projeto funcional ,  etl-vendas-datawarehouse
+**A sales ETL pipeline for a data warehouse**: it extracts a **sales CSV**, transforms it into a **star schema** (dim_tempo, dim_cliente, dim_produto + fato_vendas), loads it into **SQLite** and **verifies integrity** (foreign keys, row counts). It is an educational dimensional-modelling/ETL lab.
 
----
+## Status
 
-## Quick Start
+An educational lab, working and tested (6 tests).
 
-```bash
-# Clone and enter
-git clone https://github.com/KelvinOliveiraCode/<repo>.git
-cd <repo>
+## Features
 
-# Install dependencies
-# No requirements.txt detected
+- **Extract** (`etl.py`): `extract(csv_path)` — reads the sales CSV into a pandas DataFrame.
+- **Transform**: builds the `dim_tempo`, `dim_cliente`, `dim_produto` dimensions and the `fato_vendas` fact table from the raw data.
+- **Load** (`db.py`): `connect`, `create_schema`, `clear_tables`, `insert_rows` — loads into SQLite.
+- **Load quality** (`verify_integrity`): `foreign_key_check` + per-table counts; `ETLResult` summarises rows read/written.
+- **CLI**: `etl-vendas <csv> [--db path]`.
 
-# Run the project
-python main.py
+## Architecture
 
-# Run tests
-pytest
+An `etl_vendas_datawarehouse` package with `etl.py` (extract/transform), `db.py` (schema/load/integrity) and `cli.py`. Output: a SQLite file with the star schema.
+
+```mermaid
+flowchart LR
+    CSV[sales.csv] --> EXT[extract - pandas]
+    EXT --> TRF[transform - dims + fact]
+    TRF --> LD[insert_rows - SQLite]
+    LD --> DB[(dw.db - star schema)]
+    LD --> VI[verify_integrity - FK + counts]
+    CLI[etl-vendas csv --db] --> EXT
 ```
 
-## How it works
+## Stack
 
-Estrutura limpa e modular com separação de responsabilidades.
+- Python ≥ 3.10
+- pandas ≥ 2.2 (only dependency; SQLite via stdlib)
+- pytest (dev)
 
----
+## Repository layout
 
-## Capabilities
+```
+etl-vendas-datawarehouse/
+├── pyproject.toml · BRIEF.md
+├── src/etl_vendas_datawarehouse/
+│   ├── etl.py   # extract/transform (star schema)
+│   ├── db.py    # schema/load/verification
+│   └── cli.py   # CLI
+├── tests/       # 6 tests
+└── LICENSE      # MIT
+```
 
-| Capacidade | Descrição |
-|------------|-------------|
-| Carregamento de Dados | Auto-download do TensorFlow creditcard.csv (284k transações) com cache local |
-| EDA e Visualização | Distribuição de classes, histogramas de Amount, heatmaps de correlação (matplotlib/seaborn) |
-| Pré-processamento | RobustScaler em Amount/Time, split estratificado, remoção de duplicatas |
-| Balanceamento | SMOTE oversampling (fallback: class_weight="balanced") |
-| Modelagem | LogisticRegression, RandomForest, ExtraTrees com RandomizedSearchCV (StratifiedKFold) |
-| Métricas | Accuracy, Precision, Recall, F1, ROC AUC, Specificity, Confusion Matrix |
-| Seleção | Score ponderado: Recall 40% + F1 30% + Precision 20% + Accuracy 10% |
-| Persistência | Serialização joblib para modelo, scaler e resultados completos |
+## Prerequisites and installation
 
+```bash
+pip install -e .
+```
 
----
+## How to run
 
+```bash
+etl-vendas sales.csv --db dw.db
+```
 
+## Tests and quality
 
----
+Real command (verified by the agent):
 
-## FAQ
+```bash
+PYTHONPATH=src python -m pytest tests/
+# 6 passed
+```
 
-<details>
-<summary><strong>What is this project?</strong></summary>
+## Technical decisions and trade-offs
 
-A Python study/project demonstrating core concepts.
+- **A classic star schema** (3 dimensions + fact): didactic, direct dimensional modelling.
+- **SQLite as the target**: zero setup; the trade-off is that it does not scale to real volumetric loads.
+- **Built-in integrity verification**: FK check and counts run as part of the load.
 
-</details>
+## Known limitations and roadmap
 
-<details>
-<summary><strong>How do I run it?</strong></summary>
+- No incremental load (it clears and reloads the tables on each run).
+- The input CSV must have the fields the transform expects (no advanced schema validation).
 
-See [Quick Start](#quick-start) for copy-paste commands.
+## Development process
 
-</details>
+An individual project by Kelvin Oliveira, built with orchestrated AI agents and reviewed by the author.
 
-<details>
-<summary><strong>Are there tests?</strong></summary>
+## License and author
 
-No automated tests in this repository.
-
-</details>
-
-<details>
-<summary><strong>Can I use this in production?</strong></summary>
-
-This is a **study/portfolio project**. Review and harden (auth, persistence, monitoring, etc.) before production use.
-
-</details>
-
-
-
----
-
-## Documentation
-
-- **Source Code** ,  Browse the `src/` directory for implementation details
-- **API Reference** ,  Inline docstrings + type hints
-- **Architecture Diagram** ,  See [architecture.mermaid](docs/architecture.mermaid) (if present)
-- **Changelog** ,  [CHANGELOG.md](CHANGELOG.md) (if present)
-- **Contributing** ,  [CONTRIBUTING.md](CONTRIBUTING.md) (if present)
-
-## License
-
-[MIT](LICENSE) ,  Kelvin Oliveira
-
----
-
-<div align="center">
-
-**Built with** · Python 3 + scikit-learn + pandas
-
-**Author** · [Kelvin Oliveira](https://github.com/KelvinOliveiraCode) · [Portfolio](https://kelvinoliveiracode.github.io/portfolio/)
-
-</div>
+MIT — Copyright (c) 2026 Kelvin Rebelo de Oliveira. Author: [Kelvin Oliveira](https://github.com/KelvinOliveiraCode) · [Portfolio](https://kelvinoliveiracode.github.io/portfolio/)
