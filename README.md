@@ -14,11 +14,11 @@ Laboratório educacional funcional e testado (6 testes).
 
 ## Funcionalidades
 
-- **Extract** (`etl.py`): `extract(csv_path)` — lê o CSV de vendas num DataFrame pandas.
-- **Transform**: constrói as dimensões `dim_tempo`, `dim_cliente`, `dim_produto` e a tabela `fato_vendas` a partir dos dados brutos.
-- **Load** (`db.py`): `connect`, `create_schema`, `clear_tables`, `insert_rows` — carrega no SQLite.
+- **Extract** (`etl.py`): `extract(csv_path)`, lê o CSV de vendas num DataFrame pandas.
+- Transform: constrói as dimensões `dim_tempo`, `dim_cliente`, `dim_produto` e a tabela `fato_vendas` a partir dos dados brutos.
+- **Load** (`db.py`): `connect`, `create_schema`, `clear_tables`, `insert_rows`, carrega no SQLite.
 - **Qualidade de carga** (`verify_integrity`): `foreign_key_check` + contagens por tabela; `ETLResult` resume linhas lidas/gravadas.
-- **CLI**: `etl-vendas <csv> [--db caminho]`.
+- CLI: `etl-vendas <csv> [--db caminho]`.
 
 ## Arquitetura
 
@@ -42,7 +42,7 @@ flowchart LR
 
 ## Estrutura do repositório
 
-```
+```text
 etl-vendas-datawarehouse/
 ├── pyproject.toml · BRIEF.md
 ├── src/etl_vendas_datawarehouse/
@@ -77,8 +77,8 @@ PYTHONPATH=src python -m pytest tests/
 ## Decisões técnicas e trade-offs
 
 - **Star schema clássico** (3 dimensões + fato): modelagem dimensional didática e direta.
-- **SQLite como alvo**: zero setup; em troca, não escala para cargas volumétricas de verdade.
-- **Verificação de integridade embutida**: FK check e contagens rodam na própria carga.
+- SQLite como alvo: zero setup; em troca, não escala para cargas volumétricas de verdade.
+- Verificação de integridade embutida: FK check e contagens rodam na própria carga.
 
 ## Limitações conhecidas e roadmap
 
@@ -91,4 +91,4 @@ Projeto individual de Kelvin Oliveira, construído com agentes de IA orquestrado
 
 ## Licença e autor
 
-MIT — Copyright (c) 2026 Kelvin Rebelo de Oliveira. Autor: [Kelvin Oliveira](https://github.com/KelvinOliveiraCode) · [Portfólio](https://kelvinoliveiracode.github.io/portfolio/)
+MIT. Copyright (c) 2026 Kelvin Rebelo de Oliveira. Autor: [Kelvin Oliveira](https://github.com/KelvinOliveiraCode) · [Portfólio](https://kelvinoliveiracode.github.io/portfolio/)

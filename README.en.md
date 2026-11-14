@@ -14,11 +14,11 @@ An educational lab, working and tested (6 tests).
 
 ## Features
 
-- **Extract** (`etl.py`): `extract(csv_path)` — reads the sales CSV into a pandas DataFrame.
-- **Transform**: builds the `dim_tempo`, `dim_cliente`, `dim_produto` dimensions and the `fato_vendas` fact table from the raw data.
-- **Load** (`db.py`): `connect`, `create_schema`, `clear_tables`, `insert_rows` — loads into SQLite.
+- **Extract** (`etl.py`): `extract(csv_path)`, reads the sales CSV into a pandas DataFrame.
+- Transform: builds the `dim_tempo`, `dim_cliente`, `dim_produto` dimensions and the `fato_vendas` fact table from the raw data.
+- **Load** (`db.py`): `connect`, `create_schema`, `clear_tables`, `insert_rows`, loads into SQLite.
 - **Load quality** (`verify_integrity`): `foreign_key_check` + per-table counts; `ETLResult` summarises rows read/written.
-- **CLI**: `etl-vendas <csv> [--db path]`.
+- CLI: `etl-vendas <csv> [--db path]`.
 
 ## Architecture
 
@@ -42,7 +42,7 @@ flowchart LR
 
 ## Repository layout
 
-```
+```text
 etl-vendas-datawarehouse/
 ├── pyproject.toml · BRIEF.md
 ├── src/etl_vendas_datawarehouse/
@@ -77,8 +77,8 @@ PYTHONPATH=src python -m pytest tests/
 ## Technical decisions and trade-offs
 
 - **A classic star schema** (3 dimensions + fact): didactic, direct dimensional modelling.
-- **SQLite as the target**: zero setup; the trade-off is that it does not scale to real volumetric loads.
-- **Built-in integrity verification**: FK check and counts run as part of the load.
+- SQLite as the target: zero setup; the trade-off is that it does not scale to real volumetric loads.
+- Built-in integrity verification: FK check and counts run as part of the load.
 
 ## Known limitations and roadmap
 
@@ -91,4 +91,4 @@ An individual project by Kelvin Oliveira, built with orchestrated AI agents and 
 
 ## License and author
 
-MIT — Copyright (c) 2026 Kelvin Rebelo de Oliveira. Author: [Kelvin Oliveira](https://github.com/KelvinOliveiraCode) · [Portfolio](https://kelvinoliveiracode.github.io/portfolio/)
+MIT. Copyright (c) 2026 Kelvin Rebelo de Oliveira. Author: [Kelvin Oliveira](https://github.com/KelvinOliveiraCode) · [Portfolio](https://kelvinoliveiracode.github.io/portfolio/)
